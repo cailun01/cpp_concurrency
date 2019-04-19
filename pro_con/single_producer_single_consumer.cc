@@ -15,7 +15,7 @@ using std::cout; using std::endl;
 // 则需要等待消费者取走产品之后，产品库不为空才能继续往产品库中放置新的产品，相反，如果消费者取走产品的速度过快，
 // 则可能面临产品库中没有产品可使用的情况，此时需要等待生产者放入一个产品后，消费者才能继续工作。
 
-// Item buffer size.
+// Item buffer size. 产品缓冲区
 static const int kItemRepositorySize = 10;
 // number of items we plan to produce.
 static const int kItemsToProduce  = 1000;
@@ -51,8 +51,7 @@ void ProduceItem(ItemRepository* ir, int item) {
     lock.unlock(); // 解锁.
 }
 
-int ConsumeItem(ItemRepository *ir)
-{
+int ConsumeItem(ItemRepository *ir) {
     int data;
     std::unique_lock<std::mutex> lock(ir->mtx);
     // item buffer is empty, just wait here.
@@ -101,7 +100,7 @@ void InitItemRepository(ItemRepository *ir) {
 int main() {
     InitItemRepository(&gItemRepository);
     std::thread producer(ProducerTask); // 创建生产者线程.
-    std::thread consumer(ConsumerTask); // 创建消费之线程.
+    std::thread consumer(ConsumerTask); // 创建消费者线程.
     producer.join();
     consumer.join();
 }
